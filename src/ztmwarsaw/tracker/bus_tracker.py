@@ -1,4 +1,4 @@
-from tracker import Tracker
+from ztmwarsaw.tracker import Tracker
 from ztmwarsaw.api.api_caller import ApiCaller
 
 

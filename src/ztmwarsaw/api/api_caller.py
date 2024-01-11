@@ -6,9 +6,5 @@ class APICaller(ABC):
         pass
 
     @abstractmethod
-    def build(self):
-        pass
-
-    @abstractmethod
     def call(self):
         pass
