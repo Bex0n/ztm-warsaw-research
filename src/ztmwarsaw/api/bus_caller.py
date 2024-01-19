@@ -32,14 +32,13 @@ class BusCaller(APICaller):
     def __get_data(self, url: str, params: LocationRequest) -> Dict[str, Any]:
         params = self.__get_obligatory_params(params)
         response = requests.get(url, params=params)
-        print(response.json())
         if response.status_code == 200:
             result = response.json()
         else:
-            raise Exception("Error while calling API")
+            return None
 
-        if result["result"] is None:
-            raise Exception("Error while calling API")
+        if result["result"] == "Błędna metoda lub parametry wywołania":
+            return None
 
         return result["result"]
 

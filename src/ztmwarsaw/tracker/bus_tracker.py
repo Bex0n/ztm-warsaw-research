@@ -1,10 +1,40 @@
-from ztmwarsaw.tracker import Tracker
-from ztmwarsaw.api.api_caller import ApiCaller
+import time
+from tqdm import tqdm
+
+from .tracker import Tracker
+from ztmwarsaw.api.api_caller import APICaller
 
 
 class BusTracker(Tracker):
-    def __init__(self):
-        Tracker.__init__(self)
+    def __init__(self, apicaller: APICaller):
+        Tracker.__init__(self, apicaller)
 
-    def build(self, api_caller: ApiCaller):
-        self.api_caller = api_caller
+    def track(self,
+              line: str,
+              brigade: str = None,
+              duration: int = 60,
+              frequency: int = 10,
+              vehicle_number: str = None):
+        params = {
+            "line": line,
+            "brigade": brigade
+        }
+        result = []
+        iterations = int(duration / frequency)
+        with tqdm(total=iterations, desc='Tracking Bus') as pbar:
+            for _ in range(iterations):
+                try:
+                    location = self.api_caller.get_location(params)
+                    if location is not None:
+                        if vehicle_number is not None:
+                            for vehicle in location:
+                                if vehicle["VehicleNumber"] == vehicle_number:
+                                    result.append(vehicle)
+                        else:
+                            result.append(location)
+                except Exception as e:
+                    print(f"Error occurred: {e}")
+                pbar.update(1)
+                time.sleep(frequency)
+
+        return result

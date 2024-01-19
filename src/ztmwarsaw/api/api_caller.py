@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from typing import Any, Dict
 
 
 class APICaller(ABC):
@@ -6,5 +7,5 @@ class APICaller(ABC):
         pass
 
     @abstractmethod
-    def get_location(self):
+    def get_location(self) -> Dict[str, Any]:
         pass
