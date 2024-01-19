@@ -6,5 +6,5 @@ class APICaller(ABC):
         pass
 
     @abstractmethod
-    def call(self):
+    def get_location(self):
         pass
