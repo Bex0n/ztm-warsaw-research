@@ -12,6 +12,3 @@ class ITracker(ABC):
     @abstractmethod
     def track(self, *args: Any, **kwargs: Any) -> List[Any]:
         pass
-
-    def save(self, filename: str) -> None:
-        pass

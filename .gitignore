@@ -56,3 +56,4 @@ cover/
 
 src/*.png
 src/*.html
+notebooks/.virtual_documents

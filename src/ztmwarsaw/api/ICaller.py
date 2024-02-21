@@ -5,7 +5,7 @@ from pydantic import BaseModel
 
 
 class LocationRequest(BaseModel):
-    line: str
+    line: Optional[str] = None
     brigade: Optional[str] = None
 
 

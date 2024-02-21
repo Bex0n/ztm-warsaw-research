@@ -1,3 +1,4 @@
+import json
 import time
 from typing import Any, List, Optional
 
@@ -12,14 +13,23 @@ class BusTracker(ITracker):
     def __init__(self, apicaller: ICaller):
         ITracker.__init__(self, apicaller)
 
+    def __append_to_file(self, filepath: str, data: Any) -> None:
+        try:
+            with open(filepath, "a") as f:
+                json.dump(data, f)
+                f.write("\n")
+        except Exception as e:
+            print(f"Error appending data to file: {e}")
+
     def track(
         self,
         *args: Any,
-        line: str,
+        line: Optional[str] = None,
         brigade: Optional[str] = None,
         duration: int = 60,
         frequency: int = 10,
         vehicle_number: Optional[str] = None,
+        filepath: Optional[str] = None,
         **kwargs: Any,
     ) -> List[Any]:
         try:
@@ -32,17 +42,18 @@ class BusTracker(ITracker):
         with tqdm(total=iterations, desc="Tracking Bus") as pbar:
             for _ in range(iterations):
                 try:
-                    location = self.api_caller.get_location(params)
-                    if location is not None:
-                        if vehicle_number is not None:
-                            for vehicle in location:
-                                if vehicle["VehicleNumber"] == vehicle_number:
-                                    result.append(vehicle)
-                        else:
-                            result.append(location)
+                    response = self.api_caller.get_location(params)
+                    if response is not None:
+                        for location in response:
+                            if (
+                                location["VehicleNumber"] == vehicle_number
+                                or vehicle_number is None
+                            ):
+                                result.append(location)
+                                if filepath:
+                                    self.__append_to_file(filepath, location)
                 except Exception as e:
                     print(f"Error occurred: {e}")
                 pbar.update(1)
                 time.sleep(frequency)
-
         return result

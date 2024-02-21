@@ -25,6 +25,8 @@ class BusCaller(ICaller):
 
     def __get_data(self, url: str, params: LocationRequest) -> Optional[Dict]:
         params_dict = self.__get_obligatory_params(params)
+        print("Url: ", url)
+        print("Params: ", params_dict)
         response = requests.get(url, params=params_dict)
         if response.status_code != 200:
             return None
@@ -37,3 +39,6 @@ class BusCaller(ICaller):
 
     def get_location(self, params: LocationRequest) -> Optional[Dict]:
         return self.__get_data(self.location_url, params)
+
+    def get_all_locations(self) -> Optional[Dict]:
+        return self.__get_data(self.location_url, LocationRequest())
