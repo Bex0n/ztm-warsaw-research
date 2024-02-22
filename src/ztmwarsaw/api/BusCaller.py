@@ -12,7 +12,9 @@ class BusCaller(ICaller):
         self.schedule_url = "https://api.um.warszawa.pl/api/action/dbtimetable_get/"
         self.stop_url = "https://api.um.warszawa.pl/api/action/dbstore_get/"
         self.location_resource_id = "f2e5503e-927d-4ad3-9500-4ab9e55deb59"
+        self.stop_lines_resource_id = "88cd555f-6f31-43ca-9de4-66c479ad5942"
         self.stop_resource_id = "ab75c33d-3a26-4342-b36a-6e5fef0a3ac3"
+        self.schedule_resource_id = "e923fa0e-d96c-43f9-ae6e-60518c9f3238"
         self.apikey = apikey
         self.vehicle_type = 1
 
@@ -29,6 +31,22 @@ class BusCaller(ICaller):
         obligatory_params = {
             "apikey": self.apikey,
             "id": self.stop_resource_id,
+            **params,
+        }
+        return obligatory_params
+
+    def __get_stop_lines_obligatory_params(self, params: Dict[str, Any]) -> Dict[str, Any]:
+        obligatory_params = {
+            "apikey": self.apikey,
+            "id": self.stop_lines_resource_id,
+            **params,
+        }
+        return obligatory_params
+
+    def __get_schedule_obligatory_params(self, params: Dict[str, Any]) -> Dict[str, Any]:
+        obligatory_params = {
+            "apikey": self.apikey,
+            "id": self.schedule_resource_id,
             **params,
         }
         return obligatory_params
@@ -55,3 +73,22 @@ class BusCaller(ICaller):
     def get_all_stops(self) -> Optional[Dict]:
         params = self.__get_stop_obligatory_params({})
         return self.__get_data(self.stop_url, params=params)
+
+    def get_stop_lines(self, stop_id: str, stop_nr: str) -> Optional[Dict]:
+        params = self.__get_stop_lines_obligatory_params(
+            {
+                "busstopId": stop_id,
+                "busstopNr": stop_nr,
+            }
+        )
+        return self.__get_data(self.schedule_url, params=params)
+
+    def get_schedule(self, stop_id: str, stop_nr: str, line: str) -> Optional[Dict]:
+        params = self.__get_schedule_obligatory_params(
+            {
+                "busstopId": stop_id,
+                "busstopNr": stop_nr,
+                "line": line,
+            }
+        )
+        return self.__get_data(self.schedule_url, params=params)
