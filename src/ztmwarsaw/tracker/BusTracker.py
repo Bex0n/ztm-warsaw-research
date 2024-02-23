@@ -10,10 +10,26 @@ from ztmwarsaw.tracker.ITracker import ITracker
 
 
 class BusTracker(ITracker):
+    """
+    A concrete implementation of the ITracker interface for tracking buses.
+    Utilizes an API caller to fetch real-time bus location data.
+    """
+
     def __init__(self, apicaller: ICaller):
-        ITracker.__init__(self, apicaller)
+        """
+        Initializes the BusTracker with a specific API caller.
+
+        :param apicaller: An instance of a class that implements the ICaller interface.
+        """
+        super().__init__(apicaller)
 
     def __append_to_file(self, filepath: str, data: Any) -> None:
+        """
+        Appends a piece of data to a file.
+
+        :param filepath: The path to the file where data should be appended.
+        :param data: The data to append to the file.
+        """
         try:
             with open(filepath, "a") as f:
                 json.dump(data, f)
@@ -32,6 +48,18 @@ class BusTracker(ITracker):
         filepath: Optional[str] = None,
         **kwargs: Any,
     ) -> List[Any]:
+        """
+        Tracks bus locations for a specified duration and frequency, optionally filtering
+        by line, brigade, or vehicle number. Results can be saved to a file.
+
+        :param line: Filter by bus line.
+        :param brigade: Filter by brigade.
+        :param duration: The tracking duration in seconds.
+        :param frequency: The frequency of data collection in seconds.
+        :param vehicle_number: Filter by vehicle number.
+        :param filepath: Path to a file where results will be saved.
+        :return: A list of collected data points.
+        """
         try:
             params = LocationRequest(line=line, brigade=brigade)
         except ValidationError as e:
