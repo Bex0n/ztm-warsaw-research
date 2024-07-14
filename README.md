@@ -1,5 +1,8 @@
 # ztm-warsaw-research
 
+![Alt Text](notebooks/vehicle_9424_tracking.gif)
+
+
 **ztmwarsaw** is a Python package created to make analyzing Warsaw's public transport data a breeze. The goal is to make data collection quick and simple, helping anyone interested to easily dig into how the city moves.
 
 ## Installation
